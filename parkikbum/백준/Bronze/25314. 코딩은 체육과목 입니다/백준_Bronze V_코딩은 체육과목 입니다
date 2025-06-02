@@ -1,0 +1,8 @@
+var a = Int(readLine()!)! / 4
+var result = "int"
+
+for _ in 0..<a {
+    result = "long " + result
+}
+
+print(result)
