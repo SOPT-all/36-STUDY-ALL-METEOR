@@ -1,0 +1,22 @@
+import Foundation
+
+func solution(_ clothes:[[String]]) -> Int {
+    var result: Int = 1
+    var clothesTypes: [String] = []
+    var hashClothes: [String: String] = [:]
+    
+    for c in clothes {
+        if !clothesTypes.contains(c[1]) {
+            clothesTypes.append(c[1])
+        }
+        
+        hashClothes[c[0]] = c[1]
+    }
+    
+    for type in clothesTypes {
+        let count = hashClothes.values.filter { $0 == type}.count
+        result *= (count + 1)
+    }
+    
+    return result - 1
+}
