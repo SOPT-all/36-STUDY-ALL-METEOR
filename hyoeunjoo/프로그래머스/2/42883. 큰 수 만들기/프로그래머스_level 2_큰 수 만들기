@@ -1,0 +1,36 @@
+import java.util.*;
+
+class Solution {
+    public String solution(String number, int k) {
+    
+        StringBuilder result = new StringBuilder();      
+        int pickCount = number.length() - k;             
+        int currentIndex = 0;                          
+
+        while (k > 0 && currentIndex < number.length()) {
+            int maxNumIndex = currentIndex;               
+            char maxNum = '0';                        
+
+            int searchRange = Math.min(currentIndex + k + 1, number.length());
+            
+            for (int i = currentIndex; i < searchRange; i++) {
+                char currentNum = number.charAt(i);
+                if (currentNum > maxNum) {
+                    maxNum = currentNum;
+                    maxNumIndex = i;
+
+                    if (maxNum == '9') break;          
+                }
+            }
+
+            result.append(maxNum);                     
+            k -= (maxNumIndex - currentIndex);               
+            currentIndex = maxNumIndex + 1;                  
+        }
+
+        result.append(number.substring(currentIndex));
+
+        return result.substring(0, pickCount);
+    }
+}
+

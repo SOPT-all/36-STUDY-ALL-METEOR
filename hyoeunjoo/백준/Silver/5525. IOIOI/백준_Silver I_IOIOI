@@ -1,0 +1,40 @@
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int n = sc.nextInt();
+        int m = sc.nextInt();
+        String s = sc.next();
+
+        List<Integer> index = new ArrayList<>();
+
+        for (int i = 0; i < m; i++) {
+            if (s.charAt(i) == 'I') {
+                index.add(i);
+            }
+        }
+
+        int count = 0;
+
+        for (int i = 0; i <= index.size() - (n + 1); i++) {
+            int goal = 0;
+
+            for (int j = i; j + 1 < index.size(); j++) {
+                if (index.get(j + 1) - index.get(j) == 2) {
+                    goal++;
+                    if (goal >= n) {
+                        count++;
+                    }
+                } else {
+                    break;
+                }
+            }
+
+            i += goal;
+        }
+
+        System.out.println(count);
+    }
+}
