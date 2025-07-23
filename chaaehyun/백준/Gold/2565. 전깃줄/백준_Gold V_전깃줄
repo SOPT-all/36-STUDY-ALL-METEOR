@@ -1,0 +1,35 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+	int n;
+    cin >> n;
+
+    vector<pair<int, int>> wires(n);
+    for (int i = 0; i < n; i++) {
+        cin >> wires[i].first >> wires[i].second;
+    }
+
+    sort(wires.begin(), wires.end());
+
+    vector<int> b_values;
+    for (int i = 0; i < n; i++) {
+        b_values.push_back(wires[i].second);
+    }
+
+    vector<int> dp(n, 1); // n번째까지 dp 벡터 1로 초기화
+
+    for(int i = 0; i < n; i++) {
+        for (int j = 0; j < i; j++) {
+            if (b_values[i] > b_values[j])
+                dp[i] = max(dp[i], dp[j] + 1);
+        }
+    }
+
+    int cnt = *max_element(dp.begin(), dp.end());
+    cout << n - cnt;
+    return 0;
+}
