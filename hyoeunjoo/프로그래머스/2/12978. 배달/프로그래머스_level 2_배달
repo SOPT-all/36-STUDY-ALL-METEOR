@@ -1,0 +1,48 @@
+import java.util.*;
+
+class Solution {
+    public int solution(int N, int[][] road, int K) {
+        // 1. 거리 배열 초기화
+        int[] dist = new int[N + 1];
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        dist[1] = 0;  // 시작점 (1번 마을)
+        
+        // 2. 벨만-포드 알고리즘
+        // 최대 N-1번 반복 (모든 정점을 거쳐가는 최단 경로)
+        for (int i = 0; i < N - 1; i++) {
+            boolean updated = false;
+            
+            // 모든 간선에 대해 확인
+            for (int[] edge : road) {
+                int a = edge[0];
+                int b = edge[1];
+                int cost = edge[2];
+                
+                // a -> b 방향으로 더 짧은 경로가 있는지 확인
+                if (dist[a] != Integer.MAX_VALUE && dist[a] + cost < dist[b]) {
+                    dist[b] = dist[a] + cost;
+                    updated = true;
+                }
+                
+                // b -> a 방향으로 더 짧은 경로가 있는지 확인 (양방향)
+                if (dist[b] != Integer.MAX_VALUE && dist[b] + cost < dist[a]) {
+                    dist[a] = dist[b] + cost;
+                    updated = true;
+                }
+            }
+            
+            // 더 이상 갱신이 없으면 조기 종료
+            if (!updated) break;
+        }
+        
+        // 3. K 시간 이하로 도달 가능한 마을 개수 세기
+        int answer = 0;
+        for (int i = 1; i <= N; i++) {
+            if (dist[i] <= K) {
+                answer++;
+            }
+        }
+        
+        return answer;
+    }
+}

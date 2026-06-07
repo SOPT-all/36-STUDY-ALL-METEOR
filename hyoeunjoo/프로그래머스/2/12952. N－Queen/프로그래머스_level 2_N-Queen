@@ -1,0 +1,97 @@
+import java.util.*;
+
+class Solution {
+
+    static boolean[][] board;
+    static int n;
+    static int answer = 0;
+
+    public int solution(int n) {
+        Solution.n = n;
+        board = new boolean[n][n];
+
+        // 초기화
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                board[i][j] = true;
+            }
+        }
+
+        dfs(0);
+        return answer;
+    }
+
+    private void dfs(int col) {
+
+        // 퀸 n개 모두 놓았으면 정답 1 증가
+        if (col == n) {
+            answer++;
+            return;
+        }
+
+        // 현재 열의 행들을 시도
+        for (int row = 0; row < n; row++) {
+
+            // 놓을 수 없는 칸이면 skip
+            if (!board[row][col]) continue;
+
+            // 이번에 false로 만든 좌표들을 기록
+            List<int[]> changed = new ArrayList<>();
+
+            // (row, col)에 퀸을 놓기
+            markFalse(row, col, changed);
+
+            // 다음 열 탐색
+            dfs(col + 1);
+
+            // 되돌리기
+            restore(changed);
+        }
+    }
+
+    private void markFalse(int r, int c, List<int[]> changed) {
+
+        // 같은 행
+        for (int col = 0; col < n; col++) {
+            if (board[r][col]) {
+                board[r][col] = false;
+                changed.add(new int[]{r, col});
+            }
+        }
+
+        // 같은 열
+        for (int row = 0; row < n; row++) {
+            if (board[row][c]) {
+                board[row][c] = false;
+                changed.add(new int[]{row, c});
+            }
+        }
+
+        // 대각선 4방향
+        int[] dr = {1, 1, -1, -1};
+        int[] dc = {1, -1, 1, -1};
+
+        for (int d = 0; d < 4; d++) {
+            int nr = r;
+            int nc = c;
+
+            while (true) {
+                nr += dr[d];
+                nc += dc[d];
+
+                if (nr < 0 || nr >= n || nc < 0 || nc >= n) break;
+
+                if (board[nr][nc]) {
+                    board[nr][nc] = false;
+                    changed.add(new int[]{nr, nc});
+                }
+            }
+        }
+    }
+
+    private void restore(List<int[]> changed) {
+        for (int[] p : changed) {
+            board[p[0]][p[1]] = true;
+        }
+    }
+}

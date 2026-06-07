@@ -1,0 +1,55 @@
+import java.util.*;
+
+class Solution {
+    private static final int[] dx = {0, 0, -1, 1};
+    private static final int[] dy = {-1, 1, 0, 0};
+
+    public int solution(String[] maps) {
+        int n = maps.length, m = maps[0].length();
+        int sr = 0, sc = 0, lr = 0, lc = 0, er = 0, ec = 0;
+
+        for (int r = 0; r < n; r++) {
+            for (int c = 0; c < m; c++) {
+                char ch = maps[r].charAt(c);
+                if (ch == 'S') { sr = r; sc = c; }
+                else if (ch == 'L') { lr = r; lc = c; }
+                else if (ch == 'E') { er = r; ec = c; }
+            }
+        }
+
+        int toLever = bfs(maps, sr, sc, lr, lc);
+        if (toLever == -1) return -1;
+
+        int toExit = bfs(maps, lr, lc, er, ec);
+        if (toExit == -1) return -1;
+
+        return toLever + toExit;
+    }
+
+    private int bfs(String[] maps, int sr, int sc, int tr, int tc) {
+        int n = maps.length, m = maps[0].length();
+        boolean[][] visited = new boolean[n][m];
+        Deque<int[]> dq = new ArrayDeque<>();
+
+        dq.addLast(new int[]{sr, sc, 0});
+        visited[sr][sc] = true;
+
+        while (!dq.isEmpty()) {
+            int[] cur = dq.pollFirst();
+            int r = cur[0], c = cur[1], d = cur[2];
+
+            if (r == tr && c == tc) return d;
+
+            for (int k = 0; k < 4; k++) {
+                int nr = r + dx[k], nc = c + dy[k];
+                if (nr < 0 || nr >= n || nc < 0 || nc >= m) continue;
+                if (visited[nr][nc]) continue;
+                if (maps[nr].charAt(nc) == 'X') continue;
+
+                visited[nr][nc] = true;
+                dq.addLast(new int[]{nr, nc, d + 1});
+            }
+        }
+        return -1;
+    }
+}
